@@ -1,4 +1,11 @@
-const stages = ['Sourced', 'Screen', 'Diligence', 'IC', 'Invested', 'Passed']
+const stages = [
+  { name: 'Sourced', description: 'New inbound, warm, or outbound leads.' },
+  { name: 'Screen', description: 'Quick checks, analyst notes, light research.' },
+  { name: 'Diligence', description: 'Data room reviews, metrics pulls, expert calls.' },
+  { name: 'IC', description: 'Investment committee memos, comments, and votes.' },
+  { name: 'Invested', description: 'Signed, funded, and actively monitored.' },
+  { name: 'Passed', description: 'Closed out with context for future reference.' },
+]
 
 const sampleDeals = [
   {
@@ -67,49 +74,60 @@ function KanbanBoard() {
   return (
     <div className="kanban-board">
       {stages.map((stage) => {
-        const deals = sampleDeals.filter((deal) => deal.stage === stage)
-        return (
-          <section className="kanban-column" key={stage}>
-            <header>
-              <p>{stage}</p>
-              <span>{deals.length}</span>
-            </header>
-            <div className="kanban-column-body">
-              {deals.length === 0 && (
-                <p className="empty-state">No deals in this stage yet.</p>
-              )}
-              {deals.map((deal) => (
-                <article key={deal.id} className="deal-card">
-                  <div className="deal-card-head">
-                    <div>
-                      <p className="deal-name">{deal.name}</p>
-                      <a href={deal.company_url} target="_blank" rel="noreferrer">
-                        {deal.company_url.replace(/^https?:\/\//, '')}
-                      </a>
-                    </div>
-                    <span className="deal-status">{deal.status}</span>
-                  </div>
-                  <dl>
-                    <div>
-                      <dt>Owner</dt>
-                      <dd>{deal.owner}</dd>
-                    </div>
-                    <div>
-                      <dt>Round</dt>
-                      <dd>{deal.round}</dd>
-                    </div>
-                    <div>
-                      <dt>Check Size</dt>
-                      <dd>{deal.check_size}</dd>
-                    </div>
-                  </dl>
-                </article>
-              ))}
-            </div>
-          </section>
-        )
+        const deals = sampleDeals.filter((deal) => deal.stage === stage.name)
+        return <KanbanColumn key={stage.name} stage={stage} deals={deals} />
       })}
     </div>
+  )
+}
+
+function KanbanColumn({ stage, deals }) {
+  return (
+    <section className="kanban-column">
+      <header>
+        <div>
+          <p>{stage.name}</p>
+          <span className="column-subtext">{stage.description}</span>
+        </div>
+        <span>{deals.length}</span>
+      </header>
+      <div className="kanban-column-body">
+        {deals.length === 0 && <p className="empty-state">No deals in this stage yet.</p>}
+        {deals.map((deal) => (
+          <DealCard key={deal.id} deal={deal} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function DealCard({ deal }) {
+  return (
+    <article className="deal-card">
+      <div className="deal-card-head">
+        <div>
+          <p className="deal-name">{deal.name}</p>
+          <a href={deal.company_url} target="_blank" rel="noreferrer">
+            {deal.company_url.replace(/^https?:\/\//, '')}
+          </a>
+        </div>
+        <span className="deal-status">{deal.status}</span>
+      </div>
+      <dl>
+        <div>
+          <dt>Owner</dt>
+          <dd>{deal.owner}</dd>
+        </div>
+        <div>
+          <dt>Round</dt>
+          <dd>{deal.round}</dd>
+        </div>
+        <div>
+          <dt>Check Size</dt>
+          <dd>{deal.check_size}</dd>
+        </div>
+      </dl>
+    </article>
   )
 }
 
