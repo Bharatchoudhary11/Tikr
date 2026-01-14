@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react'
-import '../App.css'
+import { useNavigate } from 'react-router-dom'
 
 function SignIn() {
   const [formValues, setFormValues] = useState({ email: '', password: '' })
-  const [status, setStatus] = useState('idle')
-  const [message, setMessage] = useState('')
-
-  const disabled = status === 'loading'
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const canSubmit = useMemo(() => {
     return Boolean(formValues.email.trim() && formValues.password.trim())
@@ -15,27 +13,17 @@ function SignIn() {
   const handleChange = (event) => {
     const { name, value } = event.target
     setFormValues((prev) => ({ ...prev, [name]: value }))
-    if (status !== 'idle') {
-      setStatus('idle')
-      setMessage('')
-    }
+    if (error) setError('')
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
     if (!canSubmit) {
-      setStatus('error')
-      setMessage('Enter your work email and password to continue.')
+      setError('Enter your work email and password to continue.')
       return
     }
 
-    setStatus('loading')
-    setMessage('')
-
-    window.setTimeout(() => {
-      setStatus('success')
-      setMessage('Demo login successful. Wire this form to FastAPI auth next.')
-    }, 900)
+    navigate('/deals')
   }
 
   return (
@@ -81,16 +69,9 @@ function SignIn() {
           </button>
         </div>
 
-        <button type="submit" disabled={disabled}>
-          {disabled ? 'Signing in…' : 'Access workspace'}
-        </button>
+        <button type="submit">Access workspace</button>
 
-        {status === 'error' && (
-          <p className="status status-error">{message}</p>
-        )}
-        {status === 'success' && (
-          <p className="status status-success">{message}</p>
-        )}
+        {error && <p className="status status-error">{error}</p>}
       </form>
     </main>
   )
