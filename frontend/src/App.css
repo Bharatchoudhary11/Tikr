@@ -266,11 +266,17 @@
 .kanban-column header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.2);
   font-weight: 600;
   letter-spacing: 0.01em;
+  gap: 0.5rem;
+}
+
+.kanban-column header > div {
+  flex: 1;
+  min-width: 0;
 }
 
 .column-subtext {
@@ -280,6 +286,8 @@
   font-size: 0.75rem;
   letter-spacing: 0;
   margin-top: 0.15rem;
+  line-height: 1.4;
+  word-break: break-word;
 }
 
 .kanban-column header span {
@@ -340,12 +348,14 @@
   justify-content: space-between;
   gap: 1rem;
   align-items: flex-start;
+  min-width: 0;
 }
 
 .deal-name {
   margin: 0;
   font-weight: 600;
   font-size: 1rem;
+  word-break: break-word;
 }
 
 .deal-card-head a {
@@ -368,6 +378,10 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  white-space: nowrap;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .deal-card dl {
